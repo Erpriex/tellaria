@@ -1,34 +1,39 @@
-try{
-    require("./config.json");
-}catch(e){
-    console.error("Le fichier de configuration n'est pas présent.")
-    return;
-}
-const config = require('./config.json');
 const { Client, GatewayIntentBits } = require('discord.js');
-const bot = new Client({ intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-] });
 
 const CommandSpeak = require('./commands/CommandSpeak');
 
-bot.on('ready', () => {
-    console.log("Bot ready !");
-});
+const MessageCreateListener = require('./listeners/MessageCreateListener');
+const ReadyListener = require('./listeners/ReadyListener');
 
-bot.on('messageCreate', (message) => {
-    if(message.channel.type == 1) return; // DM_CHANNEL
-    if(message.author.bot) return;
+class Tellaria {
 
-    if(!message.content.startsWith(config.commandPrefix) || message.content.length <= config.commandPrefix.length) return;
+    start(){
+        try{
+            require("./config.json");
+        }catch(e){
+            console.error("Le fichier de configuration n'est pas présent.")
+            return;
+        }
+        this.config = require('./config.json');
 
-    let command = message.content.slice(1);
-    
-    if(CommandSpeak.match(command)){
-        CommandSpeak.action(message);
+        this.bot = new Client({
+            intents: [
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.MessageContent,
+            ]
+        });
+
+        this.bot.login(this.config.token);
+
+        this.commandSpeak = new CommandSpeak(this);
+
+        this.messageCreateListener = new MessageCreateListener(this);
+        this.messageCreateListener.onMessageCreate();
+        this.readyListener = new ReadyListener(this);
+        this.readyListener.onReady();
     }
-});
 
-bot.login(config.token);
+}
+
+new Tellaria().start();
