@@ -6,7 +6,9 @@ module.exports = class ReadyListener {
 
     onReady() {
         this.main.bot.on('ready', () => {
-            console.log("Bot ready !");
+            console.log("Ready !");
+
+            this.main.updatePresence();
         });   
     }
 }
