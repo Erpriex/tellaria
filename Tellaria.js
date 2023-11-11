@@ -1,6 +1,6 @@
 const { REST, Routes, Client, GatewayIntentBits, ActivityType } = require('discord.js');
 
-const CommandSpeak = require('./commands/CommandSpeak');
+const CommandTellaria = require('./commands/CommandTellaria');
 
 const InteractionCreateListener = require('./listeners/InteractionCreateListener');
 const MessageCreateListener = require('./listeners/MessageCreateListener');
@@ -22,30 +22,26 @@ class Tellaria {
                 GatewayIntentBits.Guilds,
                 GatewayIntentBits.GuildMessages,
                 GatewayIntentBits.MessageContent,
-                GatewayIntentBits.DirectMessages,
-            ],
-            partials: [
-                'CHANNEL',
             ],
         });
 
         this.bot.login(this.config.token);
 
-        this.commandSpeak = new CommandSpeak(this);
+        this.commandTellaria = new CommandTellaria(this);
 
-        this.InteractionCreateListener = new InteractionCreateListener(this);
-        this.InteractionCreateListener.onInteractionCreate();
+        this.interactionCreateListener = new InteractionCreateListener(this);
+        this.interactionCreateListener.onInteractionCreate();
         this.messageCreateListener = new MessageCreateListener(this);
         this.messageCreateListener.onMessageCreate();
         this.readyListener = new ReadyListener(this);
         this.readyListener.onReady();
     }
 
-    async updateCommandsREST(){
+    async updateApplicationCommands(){
         const commands = [
             {
-              name: 'speak',
-              description: 'Parler avec Tellaria',
+              name: 'tellaria',
+              description: 'Démarrer avec Tellaria',
             },
         ];
 

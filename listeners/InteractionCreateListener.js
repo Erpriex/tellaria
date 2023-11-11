@@ -7,8 +7,8 @@ module.exports = class MessageCreateListener {
     onInteractionCreate() {
         this.main.bot.on('interactionCreate', async interaction => {
             console.log(interaction);
-            if (interaction.commandName === 'speak') {
-                await interaction.reply('Pong!');
+            if(this.main.commandTellaria.match(interaction.commandName)){
+                this.main.commandTellaria.action(interaction);
             }
         });
     }

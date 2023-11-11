@@ -9,6 +9,7 @@ module.exports = class ReadyListener {
             console.log("Ready !");
 
             this.main.updatePresence();
+            // this.main.updateApplicationCommands();
         });   
     }
 }
