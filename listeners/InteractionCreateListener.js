@@ -8,7 +8,6 @@ module.exports = class MessageCreateListener {
 
     onInteractionCreate() {
         this.main.bot.on('interactionCreate', async interaction => {
-            console.log(interaction);
 
             if(interaction instanceof ChatInputCommandInteraction){
                 if(this.main.commandTellaria.match(interaction.commandName)){
@@ -17,20 +16,17 @@ module.exports = class MessageCreateListener {
             }
 
             if(interaction instanceof ButtonInteraction){
-                console.log("Button interaction");
-                interaction.deferUpdate();
-                const thread = await interaction.channel.threads.create({
-                    name: 'tellaria-' + interaction.user.username,
-                    autoArchiveDuration: 60,
-                    type: ChannelType.PrivateThread,
-                    reason: 'Discussion Tellaria',
-                });
+                if(interaction.customId === "start"){
+                    interaction.deferUpdate();
+                    const thread = await interaction.channel.threads.create({
+                        name: 'tellaria-' + interaction.user.username,
+                        autoArchiveDuration: 60,
+                        type: ChannelType.PrivateThread,
+                        reason: 'Discussion Tellaria',
+                    });
 
-                await thread.members.add(interaction.user.id);
-
-                /*await interaction.reply("C'est parti !").then((msg) => {
-                    console.log("Réponse envoyée");
-                })*/
+                    await thread.members.add(interaction.user.id);
+                }
             }
         });
     }
