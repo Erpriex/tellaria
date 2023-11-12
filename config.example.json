@@ -1,4 +1,6 @@
 {
   "token": "token",
-  "commandPrefix": "-"
+  "applicationId": "applicationId",
+  "commandPrefix": "-",
+  "devMode": true
 }

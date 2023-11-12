@@ -1,3 +1,5 @@
+const { EmbedBuilder } = require('discord.js');
+
 module.exports = class MessageCreateListener {
 
     constructor(main) {
@@ -6,15 +8,15 @@ module.exports = class MessageCreateListener {
 
     onMessageCreate() {
         this.main.bot.on('messageCreate', (message) => {
-            if(message.channel.type == 1) return; // If DM_CHANNEL
             if(message.author.bot) return;
-        
-            if(!message.content.startsWith(this.main.config.commandPrefix) || message.content.length <= this.main.config.commandPrefix.length) return;
-        
-            let commandName = message.content.slice(1)[0];
-            
-            if(this.main.commandSpeak.match(commandName)){
-                return this.main.commandSpeak.action(message);
+            if(message.channel.type == 1) return; // DM
+
+            if(message.content.startsWith("-speak ") || message.content.startsWith("-s ")){ // For V1 users
+                const oldUsers = new EmbedBuilder()
+                    .setAuthor({name: 'Salut ancien utilisateur 👋', iconURL: this.main.bot.user.avatarURL(),})
+                    .setColor('#3aa675')
+                    .addFields({ name: 'Mon utilisation a changée !', value: 'Utilise à présent la commande `/tellaria` pour intéragir avec moi', inline: false })
+                message.channel.send({ embeds: [oldUsers] });
             }
         });
     }
