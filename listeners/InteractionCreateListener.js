@@ -18,6 +18,7 @@ module.exports = class MessageCreateListener {
             if(interaction instanceof ButtonInteraction){
                 if(interaction.customId === "start"){
                     interaction.deferUpdate();
+                    console.log(interaction);
                     const thread = await interaction.channel.threads.create({
                         name: 'tellaria-' + interaction.user.username,
                         autoArchiveDuration: 60,
