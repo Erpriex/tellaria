@@ -22,6 +22,7 @@ class Tellaria {
                 GatewayIntentBits.Guilds,
                 GatewayIntentBits.GuildMessages,
                 GatewayIntentBits.MessageContent,
+                GatewayIntentBits.GuildVoiceStates
             ],
         });
 
