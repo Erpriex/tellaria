@@ -1,6 +1,9 @@
 # Config
 config.json
 
+voice-out/
+voice-callers/
+
 # Logs
 logs
 *.log

@@ -6,6 +6,8 @@ const InteractionCreateListener = require('./listeners/InteractionCreateListener
 const MessageCreateListener = require('./listeners/MessageCreateListener');
 const ReadyListener = require('./listeners/ReadyListener');
 
+const VoiceManager = require('./voice/VoiceManager');
+
 class Tellaria {
 
     async start(){
@@ -36,6 +38,8 @@ class Tellaria {
         this.messageCreateListener.onMessageCreate();
         this.readyListener = new ReadyListener(this);
         this.readyListener.onReady();
+
+        this.voiceManager = new VoiceManager();
     }
 
     async updateApplicationCommands(){

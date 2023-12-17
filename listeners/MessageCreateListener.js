@@ -1,4 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
+const fs = require('fs');
 
 module.exports = class MessageCreateListener {
 
@@ -12,9 +13,19 @@ module.exports = class MessageCreateListener {
             if(message.channel.type == 1) return; // DM
 
             if(message.channel.type == 12){
-                console.log(message.channel);
                 if(message.channel.name.startsWith('tellaria-')){
                     let msgTarget = message.content;
+
+                    if(msgTarget.length > 250){
+                        message.channel.send(":x: Désolé, je n'ai pas encore assez pris mon souffle pour pouvoir parler autant !");
+                        return;
+                    }
+
+                    if(fs.existsSync('./voice-callers/' + message.author.id + ".mp3")){
+                        this.main.voiceManager.playWithCaller(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
+                    }else{
+                        this.main.voiceManager.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
+                    }
                 }
             }
 

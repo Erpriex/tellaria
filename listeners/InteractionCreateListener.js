@@ -18,9 +18,13 @@ module.exports = class MessageCreateListener {
 
             if(interaction instanceof ButtonInteraction){
                 if(interaction.customId === "start"){
-                    let targetConnection = getVoiceConnection(interaction.guildId);
                     if(!interaction.member.voice.channel){
                         await interaction.reply({ content: ":x: Tu dois être dans un salon vocal pour pouvoir démarrer une discussion", ephemeral: true });
+                        return;
+                    }
+                    let targetConnection = getVoiceConnection(interaction.guildId);
+                    if(targetConnection){
+                        await interaction.reply({ content: ":x: Désolé je suis déjà en cours d'utilisation, chacun son tour !", ephemeral: true });
                         return;
                     }
                     interaction.deferUpdate();
