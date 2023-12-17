@@ -35,13 +35,18 @@ module.exports = class MessageCreateListener {
                         reason: 'Discussion Tellaria',
                     });
 
-                    await thread.members.add(interaction.user.id);
+                    console.log(interaction.member.voice.channel);
+                    await interaction.member.voice.channel.members.forEach((member) => {
+                        thread.members.add(member.id);
+                    })
                     
                     const connection = joinVoiceChannel({
                         channelId: interaction.member.voice.channel.id,
                         guildId: interaction.member.voice.channel.guild.id,
                         adapterCreator: interaction.member.voice.channel.guild.voiceAdapterCreator,
                     });
+
+                    this.main.threadsManagerTask.addConnection(interaction.guildId, thread);
                 }
             }
         });

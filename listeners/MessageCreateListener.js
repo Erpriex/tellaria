@@ -13,7 +13,8 @@ module.exports = class MessageCreateListener {
             if(message.channel.type == 1) return; // DM
 
             if(message.channel.type == 12){
-                if(message.channel.name.startsWith('tellaria-')){
+                if(message.channel.name.startsWith('tellaria-') && this.main.threadsManagerTask.connectionExists(message.guild.id)){
+                    this.main.threadsManagerTask.resetTimer(message.guild.id);
                     let msgTarget = message.content;
 
                     if(msgTarget.length > 250){

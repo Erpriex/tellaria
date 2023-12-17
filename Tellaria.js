@@ -8,6 +8,8 @@ const ReadyListener = require('./listeners/ReadyListener');
 
 const VoiceManager = require('./voice/VoiceManager');
 
+const ThreadsManagerTask = require('./tasks/ThreadsManagerTask');
+
 class Tellaria {
 
     async start(){
@@ -40,6 +42,8 @@ class Tellaria {
         this.readyListener.onReady();
 
         this.voiceManager = new VoiceManager();
+
+        this.threadsManagerTask = new ThreadsManagerTask(this);
     }
 
     async updateApplicationCommands(){
