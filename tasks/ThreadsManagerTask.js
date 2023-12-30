@@ -20,6 +20,7 @@ module.exports = class ThreadsManagerTask {
                 let thread = value[0];
                 let targetConnection = getVoiceConnection(key);
                 targetConnection.disconnect();
+                targetConnection.destroy();
                 thread.delete();
                 this.connections.delete(key);
             }else{
