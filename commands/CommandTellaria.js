@@ -21,7 +21,6 @@ module.exports = class CommandSpeak {
             .setLabel('Inviter')
             .setURL('https://tellaria.erpriex.fr')
             .setStyle(ButtonStyle.Link)
-            .setDisabled(true)
 
         const rowButtons = new ActionRowBuilder()
             .addComponents(start, invite);
