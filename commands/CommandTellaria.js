@@ -19,7 +19,7 @@ module.exports = class CommandSpeak {
 
         const invite = new ButtonBuilder()
             .setLabel('Inviter')
-            .setURL('https://tellaria.erpriex.fr')
+            .setURL('https://hellenia.erpriex.fr')
             .setStyle(ButtonStyle.Link)
 
         const rowButtons = new ActionRowBuilder()
