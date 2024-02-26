@@ -21,16 +21,16 @@ module.exports = class VoiceManager {
             if(newState.status === 'idle'){
                 player.stop();
                 subscription.unsubscribe();
-                this.play(fileAudioMessage, messageTarget, author, guildId, true);
+                this.play(fileAudioMessage, messageTarget, author, guildId, null, true);
             }
         });
     }
 
-    play(fileAudioMessage, messageTarget, author, guildId, caller = false){
+    play(fileAudioMessage, messageTarget, author, guildId, phonetic, caller = false){
         const player = createAudioPlayer();
 
         var filepath = path.join(__dirname, fileAudioMessage);
-        gtts.save(filepath, (caller ? '' : author.username) + ' à dit : ' + messageTarget, function() {
+        gtts.save(filepath, (caller ? '' : phonetic) + ' à dit : ' + messageTarget, function() {
             const audioFile = createAudioResource(filepath);
 
             player.play(audioFile);

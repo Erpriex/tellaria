@@ -35,7 +35,6 @@ module.exports = class MessageCreateListener {
                         reason: 'Discussion Tellaria',
                     });
 
-                    console.log(interaction.member.voice.channel);
                     await interaction.member.voice.channel.members.forEach((member) => {
                         thread.members.add(member.id);
                     })

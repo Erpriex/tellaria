@@ -2,5 +2,6 @@
   "token": "token",
   "applicationId": "applicationId",
   "commandPrefix": "-",
-  "devMode": true
+  "devMode": true,
+  "apiUrl": "https://api.example.com"
 }

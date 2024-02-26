@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
+const request = require('request');
 
 module.exports = class MessageCreateListener {
 
@@ -22,11 +23,25 @@ module.exports = class MessageCreateListener {
                         return;
                     }
 
-                    if(fs.existsSync('./voice-callers/' + message.author.id + ".mp3")){
-                        this.main.voiceManager.playWithCaller(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
-                    }else{
-                        this.main.voiceManager.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
-                    }
+                    let voiceInstance = this.main.voiceManager;
+
+                    request.get(this.main.config.apiUrl + '/tellaria/phonetic/' + message.author.id, {}, function (error, response, body) {
+                        let requestError = false;
+                        let phonetic = message.author.username;
+                        if(error) {
+                            requestError = true;
+                            console.log(error);
+                        }else if(response.statusCode == 200){
+                            let res = JSON.parse(body);
+                            phonetic = res.message;
+                        }
+
+                        if(fs.existsSync('./voice-callers/' + message.author.id + ".mp3")){
+                            voiceInstance.playWithCaller(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
+                        }else{
+                            voiceInstance.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id, phonetic);
+                        }
+                    });
                 }
             }
 
