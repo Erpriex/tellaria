@@ -23,6 +23,48 @@ module.exports = class MessageCreateListener {
                         return;
                     }
 
+                    let regexMention = "<@!?[0-9]+>";
+                    msgTarget = msgTarget.replace(new RegExp(regexMention, 'g'), (match) => {
+                        let userId = match.replace(/<@!?/, '').replace('>', '');
+                        let user = message.guild.members.cache.get(userId);
+                        let userRes = "";
+                        try{
+                            userRes = user ? user.displayName : "utilisateur inconnu";
+                        }catch{
+                            userRes = "utilisateur inconnu";
+                        }
+                        return userRes;
+                    });
+
+                    let regexUrl = "https?://(?:www\\.)?[a-zA-Z0-9-]+(?:\\.[a-zA-Z]{2,})+(?:\/[^\\s]*)?";
+                    msgTarget = msgTarget.replace(new RegExp(regexUrl, 'g'), "lien");
+
+                    let regexChannel = "<#?[0-9]+>";
+                    msgTarget = msgTarget.replace(new RegExp(regexChannel, 'g'), (match) => {
+                        let channelId = match.replace(/<#?/, '').replace('>', '');
+                        let channel = message.guild.channels.cache.get(channelId);
+                        let channelRes = "salon ";
+                        try{
+                            channelRes += channel ? channel.name : "";
+                        }catch{
+                            // Do nothing
+                        }
+                        return channelRes;
+                    });
+
+                    let regexEmote = "<a?:[a-zA-Z0-9_]+:[0-9]+>";
+                    msgTarget = msgTarget.replace(new RegExp(regexEmote, 'g'), (match) => {
+                        let emoteId = match.replace(/<a?:[a-zA-Z0-9_]+:/, '').replace('>', '');
+                        let emote = message.guild.emojis.cache.get(emoteId);
+                        let emoteRes = "émoji ";
+                        try{
+                            emoteRes += emote ? emote.name : "";
+                        }catch{
+                            // Do nothing
+                        }
+                        return emoteRes;
+                    });
+
                     let voiceInstance = this.main.voiceManager;
 
                     request.get(this.main.config.apiUrl + '/tellaria/phonetic/' + message.author.id, {}, function (error, response, body) {
