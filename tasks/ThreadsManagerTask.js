@@ -1,4 +1,4 @@
-const { getVoiceConnection } = require('@discordjs/voice');
+const { createAudioPlayer, createAudioResource, getVoiceConnection } = require('@discordjs/voice');
 
 module.exports = class ThreadsManagerTask {
 
@@ -18,11 +18,23 @@ module.exports = class ThreadsManagerTask {
         this.connections.forEach((value, key) => {
             if(value[1] <= 0){
                 let thread = value[0];
-                let targetConnection = getVoiceConnection(key);
-                targetConnection.disconnect();
-                targetConnection.destroy();
+
                 thread.delete();
                 this.connections.delete(key);
+
+                const player = createAudioPlayer();
+                const leaveAudio = createAudioResource("./voice-in/au_revoir.mp3", { inlineVolume: true });
+                player.play(leaveAudio);
+                let targetConnection = getVoiceConnection(key);
+                const subscription = targetConnection.subscribe(player);
+                player.on('stateChange', (oldState, newState) => {
+                    if(newState.status === 'idle'){
+                        player.stop();
+                        subscription.unsubscribe();
+                        targetConnection.disconnect();
+                        targetConnection.destroy();
+                    }
+                });
             }else{
                 value[1]--;
             }

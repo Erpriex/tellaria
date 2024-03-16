@@ -2,7 +2,7 @@
 config.json
 
 voice-out/
-voice-callers/
+voice-in/
 
 # Logs
 logs

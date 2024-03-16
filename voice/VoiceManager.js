@@ -12,7 +12,7 @@ module.exports = class VoiceManager {
     playWithCaller(fileAudioMessage, messageTarget, author, guildId){
         const player = createAudioPlayer();
 
-        const callerFile = createAudioResource('./voice-callers/' + author.id + ".mp3", { inlineVolume: true });
+        const callerFile = createAudioResource('./voice-in/' + author.id + ".mp3", { inlineVolume: true });
         callerFile.volume.setVolume(this.soundVol);
         player.play(callerFile);
         let targetConnection = getVoiceConnection(guildId);
