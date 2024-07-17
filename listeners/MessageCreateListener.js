@@ -78,7 +78,7 @@ module.exports = class MessageCreateListener {
                             phonetic = res.message;
                         }
 
-                        if(fs.existsSync('./voice-callers/' + message.author.id + ".mp3")){
+                        if(fs.existsSync('./voice-in/' + message.author.id + ".mp3")){
                             voiceInstance.playWithCaller(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
                         }else{
                             voiceInstance.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id, phonetic);
