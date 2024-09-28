@@ -6,7 +6,7 @@ const fs = require('fs');
 module.exports = class VoiceManager {
 
     constructor() {
-        this.soundVol = 30 / 100;
+        this.soundVol = 25 / 100;
     }
 
     playWithCaller(fileAudioMessage, messageTarget, author, guildId){

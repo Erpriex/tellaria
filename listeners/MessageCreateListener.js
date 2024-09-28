@@ -76,7 +76,7 @@ module.exports = class MessageCreateListener {
 
                         const player = createAudioPlayer();
                         const jingleFile = createAudioResource('./voice-in/notif_sound.mp3', { inlineVolume: true });
-                        jingleFile.volume.setVolume(20 / 100);
+                        jingleFile.volume.setVolume(25 / 100);
                         player.play(jingleFile);
                         let targetConnection = getVoiceConnection(message.guild.id);
                         const subscription = targetConnection.subscribe(player);
