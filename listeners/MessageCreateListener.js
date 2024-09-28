@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const request = require('request');
+const { createAudioPlayer, createAudioResource, getVoiceConnection } = require('@discordjs/voice');
 
 module.exports = class MessageCreateListener {
 
@@ -17,11 +18,6 @@ module.exports = class MessageCreateListener {
                 if(message.channel.name.startsWith('tellaria-') && this.main.threadsManagerTask.connectionExists(message.guild.id)){
                     this.main.threadsManagerTask.resetTimer(message.guild.id);
                     let msgTarget = message.content;
-
-                    if(msgTarget.length > 250){
-                        message.channel.send(":x: Désolé, je n'ai pas encore assez pris mon souffle pour pouvoir parler autant !");
-                        return;
-                    }
 
                     let regexMention = "<@!?[0-9]+>";
                     msgTarget = msgTarget.replace(new RegExp(regexMention, 'g'), (match) => {
@@ -78,11 +74,29 @@ module.exports = class MessageCreateListener {
                             phonetic = res.message;
                         }
 
-                        if(fs.existsSync('./voice-in/' + message.author.id + ".mp3")){
-                            voiceInstance.playWithCaller(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
-                        }else{
-                            voiceInstance.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id, phonetic);
+                        const player = createAudioPlayer();
+                        const jingleFile = createAudioResource('./voice-in/notif_sound.mp3', { inlineVolume: true });
+                        jingleFile.volume.setVolume(20 / 100);
+                        player.play(jingleFile);
+                        let targetConnection = getVoiceConnection(message.guild.id);
+                        const subscription = targetConnection.subscribe(player);
+
+                        if(msgTarget.length > 300){
+                            msgTarget = phonetic + " a envoyé un message que je ne peux pas lire car il est trop long";
                         }
+
+                        player.on('stateChange', (oldState, newState) => {
+                            if(newState.status === 'idle'){
+                                player.stop();
+                                subscription.unsubscribe();
+                                
+                                if(fs.existsSync('./voice-in/' + message.author.id + ".mp3")){
+                                    voiceInstance.playWithCaller(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
+                                }else{
+                                    voiceInstance.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id, phonetic);
+                                }
+                            }
+                        });
                     });
                 }
             }

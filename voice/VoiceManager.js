@@ -6,7 +6,7 @@ const fs = require('fs');
 module.exports = class VoiceManager {
 
     constructor() {
-        this.soundVol = 40 / 100;
+        this.soundVol = 30 / 100;
     }
 
     playWithCaller(fileAudioMessage, messageTarget, author, guildId){
@@ -30,7 +30,7 @@ module.exports = class VoiceManager {
         const player = createAudioPlayer();
 
         var filepath = path.join(__dirname, fileAudioMessage);
-        gtts.save(filepath, (caller ? '' : phonetic) + ' à dit : ' + messageTarget, function() {
+        gtts.save(filepath, (caller ? '' : '"De ' + phonetic + '" ') + messageTarget, function() {
             const audioFile = createAudioResource(filepath);
 
             player.play(audioFile);
