@@ -63,41 +63,50 @@ module.exports = class MessageCreateListener {
 
                     let voiceInstance = this.main.voiceManager;
 
-                    request.get(this.main.config.apiUrl + '/tellaria/phonetic/' + message.author.id, {}, function (error, response, body) {
+                    request.get(this.main.config.apiUrl + '/tellaria/phonetic/' + message.author.id, {}, (error, response, body) => {
                         let requestError = false;
                         let phonetic = message.author.username;
-                        if(error) {
+                        
+                        if (error) {
                             requestError = true;
                             console.log(error);
-                        }else if(response.statusCode == 200){
+                        } else if (response.statusCode == 200) {
                             let res = JSON.parse(body);
                             phonetic = res.message;
                         }
-
-                        const player = createAudioPlayer();
-                        const jingleFile = createAudioResource('./voice-in/notif_sound.mp3', { inlineVolume: true });
-                        jingleFile.volume.setVolume(25 / 100);
-                        player.play(jingleFile);
-                        let targetConnection = getVoiceConnection(message.guild.id);
-                        const subscription = targetConnection.subscribe(player);
-
-                        if(msgTarget.length > 300){
+                    
+                        if (msgTarget.length > 300) {
                             msgTarget = phonetic + " a envoyé un message que je ne peux pas lire car il est trop long";
                         }
-
-                        player.on('stateChange', (oldState, newState) => {
-                            if(newState.status === 'idle'){
-                                player.stop();
-                                subscription.unsubscribe();
-                                
-                                if(fs.existsSync('./voice-in/' + message.author.id + ".mp3")){
-                                    voiceInstance.playWithCaller(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
-                                }else{
-                                    voiceInstance.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id, phonetic);
+                    
+                        const player = createAudioPlayer();
+                    
+                        if (this.main.usersJingleCooldownTask.userExists(message.author.id)) {
+                            this.main.usersJingleCooldownTask.resetTimer(message.author.id);
+                            voiceInstance.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id, phonetic, false, true);
+                        } else {
+                            this.main.usersJingleCooldownTask.addUser(message.author.id);
+                    
+                            const jingleFile = createAudioResource('./voice-in/notif_sound.mp3', { inlineVolume: true });
+                            jingleFile.volume.setVolume(25 / 100);
+                            player.play(jingleFile);
+                            let targetConnection = getVoiceConnection(message.guild.id);
+                            const subscription = targetConnection.subscribe(player);
+                    
+                            player.on('stateChange', (oldState, newState) => {
+                                if (newState.status === 'idle') {
+                                    player.stop();
+                                    subscription.unsubscribe();
+                    
+                                    if (fs.existsSync('./voice-in/' + message.author.id + ".mp3")) {
+                                        voiceInstance.playWithCaller(message.author.id + ".mp3", msgTarget, message.author, message.guild.id);
+                                    } else {
+                                        voiceInstance.play(message.author.id + ".mp3", msgTarget, message.author, message.guild.id, phonetic);
+                                    }
                                 }
-                            }
-                        });
-                    });
+                            });
+                        }
+                    });                    
                 }
             }
 

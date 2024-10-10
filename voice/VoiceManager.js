@@ -26,11 +26,14 @@ module.exports = class VoiceManager {
         });
     }
 
-    play(fileAudioMessage, messageTarget, author, guildId, phonetic, caller = false){
+    play(fileAudioMessage, messageTarget, author, guildId, phonetic, caller = false, withoutPrefix = false){
         const player = createAudioPlayer();
 
         var filepath = path.join(__dirname, fileAudioMessage);
-        gtts.save(filepath, (caller ? '' : '"De ' + phonetic + '" ') + messageTarget, function() {
+
+        let prefix = withoutPrefix ? '' : '"De ' + phonetic + '" ';
+
+        gtts.save(filepath, (caller ? '' : prefix) + messageTarget, function() {
             const audioFile = createAudioResource(filepath);
 
             player.play(audioFile);

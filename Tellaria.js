@@ -9,6 +9,7 @@ const ReadyListener = require('./listeners/ReadyListener');
 const VoiceManager = require('./voice/VoiceManager');
 
 const ThreadsManagerTask = require('./tasks/ThreadsManagerTask');
+const UsersJingleCooldownTask = require('./tasks/UsersJingleCooldownTask');
 
 class Tellaria {
 
@@ -44,6 +45,7 @@ class Tellaria {
         this.voiceManager = new VoiceManager();
 
         this.threadsManagerTask = new ThreadsManagerTask(this);
+        this.usersJingleCooldownTask = new UsersJingleCooldownTask(this);
     }
 
     async updateApplicationCommands(){
