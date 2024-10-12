@@ -5,6 +5,7 @@ const CommandTellaria = require('./commands/CommandTellaria');
 const InteractionCreateListener = require('./listeners/InteractionCreateListener');
 const MessageCreateListener = require('./listeners/MessageCreateListener');
 const ReadyListener = require('./listeners/ReadyListener');
+const VoiceStateUpdateListener = require('./listeners/VoiceStateUpdateListener');
 
 const VoiceManager = require('./voice/VoiceManager');
 
@@ -41,6 +42,8 @@ class Tellaria {
         this.messageCreateListener.onMessageCreate();
         this.readyListener = new ReadyListener(this);
         this.readyListener.onReady();
+        this.voiceStateUpdateListener = new VoiceStateUpdateListener(this);
+        this.voiceStateUpdateListener.onVoiceStateUpdate();
 
         this.voiceManager = new VoiceManager();
 

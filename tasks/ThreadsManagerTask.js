@@ -57,4 +57,8 @@ module.exports = class ThreadsManagerTask {
         return this.connections.has(guildId);
     }
 
+    getThread(guildId){
+        return this.connections.get(guildId)[0];
+    }
+
 }
