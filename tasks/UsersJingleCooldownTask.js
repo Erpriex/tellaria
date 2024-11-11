@@ -5,7 +5,7 @@ module.exports = class UsersJingleCooldownTask {
         this.start = this.start.bind(this);
         this.run = this.run.bind(this);
         this.start();
-        this.defaultTimer = 20;
+        this.defaultTimer = 180;
     }
 
     start(){
