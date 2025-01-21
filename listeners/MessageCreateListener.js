@@ -19,6 +19,22 @@ module.exports = class MessageCreateListener {
                     this.main.threadsManagerTask.resetTimer(message.guild.id);
                     let msgTarget = message.content;
 
+                    // Vérifier si le message contient uniquement des caractères de ponctuation
+                    if (/^[!?\.]+$/.test(msgTarget.trim())) {
+                        const punctuationMap = {
+                            '?': 'point d\'interrogation',
+                            '!': 'point d\'exclamation',
+                            '.': 'point'
+                        };
+
+                        const uniqueChars = [...new Set(msgTarget.trim())];
+                        if (uniqueChars.length === 1) {
+                            msgTarget = `a envoyé ${msgTarget.length} ${punctuationMap[uniqueChars[0]] + (msgTarget.length > 1 ? 's' : '')}`;
+                        } else {
+                            msgTarget = `a envoyé des points de ponctuation`;
+                        }
+                    }
+
                     let regexMention = "<@!?[0-9]+>";
                     msgTarget = msgTarget.replace(new RegExp(regexMention, 'g'), (match) => {
                         let userId = match.replace(/<@!?/, '').replace('>', '');
