@@ -19,11 +19,10 @@ module.exports = class MessageCreateListener {
                     this.main.threadsManagerTask.resetTimer(message.guild.id);
                     let msgTarget = message.content;
 
-                    // Vérifier si le message contient uniquement des caractères de ponctuation
                     if (/^[!?\.]+$/.test(msgTarget.trim())) {
                         const punctuationMap = {
-                            '?': 'point d\'interrogation',
-                            '!': 'point d\'exclamation',
+                            '?': "point d'interrogation",
+                            '!': "point d'exclamation",
                             '.': 'point'
                         };
 
@@ -59,7 +58,7 @@ module.exports = class MessageCreateListener {
                         try{
                             channelRes += channel ? channel.name : "";
                         }catch{
-                            // Do nothing
+                            
                         }
                         return channelRes;
                     });
@@ -72,10 +71,14 @@ module.exports = class MessageCreateListener {
                         try{
                             emoteRes += emote ? emote.name : "";
                         }catch{
-                            // Do nothing
+                            
                         }
                         return emoteRes;
                     });
+
+                    msgTarget = msgTarget.replace(/[^\p{L}\p{N}\s\p{Extended_Pictographic}]/gu, '');
+
+                    if(msgTarget.trim() == "") return;
 
                     let voiceInstance = this.main.voiceManager;
 
